@@ -1,8 +1,7 @@
 use anyhow::{anyhow, Context, Result};
-use log::{debug, error, info};
 use reqwest::{
-    header::{HeaderMap, ACCEPT, LOCATION},
-    Client, StatusCode, Url,
+    header::{HeaderMap, ACCEPT},
+    Client,
 };
 use reqwest_cookie_store::CookieStoreMutex;
 use serde::{Deserialize, Serialize};
@@ -69,7 +68,6 @@ impl Session {
             .save_json(&mut writer)
             .map_err(|e| anyhow!("Unable to save cookie to json: {}", e));
         writer.flush()?;
-        debug!("Session cookie saved to cookies.json");
         Ok(())
     }
 

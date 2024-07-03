@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 pub struct ClientBuilder {
     store_path: PathBuf,
-    rpc_endpoint: String,
+    session_cookie_domain: String,
     session_cookie_name: String,
     rpc_addr: String,
     broker_addr: String,
@@ -24,7 +24,7 @@ impl Default for ClientBuilder {
     fn default() -> Self {
         Self {
             store_path: PathBuf::from("cookies.json"),
-            rpc_endpoint: "127.0.0.1".to_string(),
+            session_cookie_domain: "127.0.0.1".to_string(),
             session_cookie_name: "id".to_string(),
             rpc_addr: "http://127.0.0.1:8000".to_string(),
             broker_addr: "http://127.0.0.1:3333".to_string(),
@@ -42,8 +42,8 @@ impl ClientBuilder {
         self
     }
 
-    pub fn with_rpc_endpoint(mut self, endpoint: impl Into<String>) -> Self {
-        self.rpc_endpoint = endpoint.into();
+    pub fn with_session_cookie_domain(mut self, endpoint: impl Into<String>) -> Self {
+        self.session_cookie_domain = endpoint.into();
         self
     }
 
@@ -71,8 +71,7 @@ impl ClientBuilder {
             .build()?;
 
         let (has_session, session_id) =
-            Session::load(cookie_store, &self.rpc_endpoint, &self.session_cookie_name)?;
-
+            Session::load(cookie_store, &self.session_cookie_domain, &self.session_cookie_name)?;
         Ok(Client {
             store: Arc::new(store),
             client,
