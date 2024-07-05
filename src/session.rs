@@ -1,8 +1,8 @@
 use anyhow::{anyhow, Context, Result};
-use log::{debug, error, info};
+use log::debug;
 use reqwest::{
-    header::{HeaderMap, ACCEPT, LOCATION},
-    Client, StatusCode, Url,
+    header::{HeaderMap, ACCEPT},
+    Client,
 };
 use reqwest_cookie_store::CookieStoreMutex;
 use serde::{Deserialize, Serialize};
@@ -12,7 +12,7 @@ use std::{
     sync::Arc,
 };
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AuthResponse {
     pub session: String,
 }
@@ -22,12 +22,12 @@ pub struct UserData {
     pub email: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VerifyResponse {
     pub id_token: String,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Session {
     id: String,
 }
