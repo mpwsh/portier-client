@@ -29,7 +29,7 @@ pub struct VerifyResponse {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Session {
-    id: String,
+    id: Option<String>,
 }
 
 impl Default for Session {
