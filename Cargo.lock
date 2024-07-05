@@ -777,7 +777,13 @@ checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
 
 [[package]]
 name = "portier_client"
+<<<<<<< HEAD
 version = "0.1.2"
+||||||| 55d76ca
+version = "0.1.0"
+=======
+version = "0.1.1"
+>>>>>>> 2a6db8efb9f42f33137e82c0c4b29ac130614928
 dependencies = [
  "anyhow",
  "env_logger",

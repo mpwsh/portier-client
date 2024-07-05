@@ -69,7 +69,6 @@ impl Session {
             .save_json(&mut writer)
             .map_err(|e| anyhow!("Unable to save cookie to json: {}", e));
         writer.flush()?;
-        debug!("Session cookie saved to cookies.json");
         Ok(())
     }
 
