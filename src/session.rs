@@ -1,5 +1,4 @@
 use anyhow::{anyhow, Context, Result};
-use log::debug;
 use reqwest::{
     header::{HeaderMap, ACCEPT},
     Client,

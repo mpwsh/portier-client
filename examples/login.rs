@@ -5,6 +5,9 @@ use std::io::{stdin, stdout, Write};
 async fn main() -> Result<()> {
     let mut client = Client::builder()
         .with_store("custom_cookies.json")
+        .with_rpc_addr("http://127.0.0.1:8000")
+        .with_broker_addr("http://127.0.0.1:3333")
+        .with_session_cookie_domain("127.0.0.1")
         .build()?;
 
     if client.session().is_none() {
