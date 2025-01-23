@@ -64,14 +64,17 @@ impl ClientBuilder {
 
     pub fn build(self) -> Result<Client> {
         let store = Store::new(self.store_path)?;
-        let cookie_store = store.cookie_store();
+        let cookie_store = store.get();
 
         let client = ReqwestClient::builder()
             .cookie_provider(cookie_store.clone())
             .build()?;
 
-        let (has_session, session_id) =
-            Session::load(cookie_store, &self.session_cookie_domain, &self.session_cookie_name)?;
+        let (has_session, session_id) = Session::load(
+            cookie_store,
+            &self.session_cookie_domain,
+            &self.session_cookie_name,
+        )?;
         Ok(Client {
             store: Arc::new(store),
             client,

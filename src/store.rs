@@ -1,17 +1,25 @@
 use anyhow::{anyhow, Result};
 use log::debug;
+#[cfg(feature = "cookies")]
 use reqwest_cookie_store::{CookieStore, CookieStoreMutex};
 use std::{fs::File, io::BufReader, path::PathBuf, sync::Arc};
 
+#[cfg(feature = "cookies")]
 pub struct Store {
     path: PathBuf,
-    cookie_store: Arc<CookieStoreMutex>,
+    data: Arc<CookieStoreMutex>,
+}
+
+#[cfg(not(feature = "cookies"))]
+pub struct Store {
+    data: String,
 }
 
 impl Store {
+    #[cfg(feature = "cookies")]
     pub fn new<P: Into<PathBuf>>(path: P) -> Result<Self> {
         let path = path.into();
-        let cookie_store = if path.exists() {
+        let data = if path.exists() {
             debug!("Opening cookie store located in {}", path.display());
             let file = File::open(&path).map(BufReader::new)?;
             CookieStore::load_json(file)
@@ -20,17 +28,17 @@ impl Store {
             File::create(&path)?;
             CookieStore::default()
         };
-        let cookie_store = Arc::new(CookieStoreMutex::new(cookie_store));
-        Ok(Store { path, cookie_store })
+        let data = Arc::new(CookieStoreMutex::new(data));
+        Ok(Store { path, data })
     }
 
-    pub fn cookie_store(&self) -> Arc<CookieStoreMutex> {
-        self.cookie_store.clone()
+    pub fn get(&self) -> Arc<CookieStoreMutex> {
+        self.data.clone()
     }
 
     pub fn save(&self) -> Result<()> {
         let mut writer = File::create(&self.path)?;
-        let store = self.cookie_store.lock().unwrap();
+        let store = self.data.lock().unwrap();
         store
             .save_json(&mut writer)
             .map_err(|e| anyhow!("Failed to save cookie store: {}", e))?;
